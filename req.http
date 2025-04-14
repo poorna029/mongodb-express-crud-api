@@ -1,0 +1,28 @@
+
+GET http://localhost:3000/users
+
+### create user
+POST http://localhost:3000/users
+Content-Type: application/json 
+
+{
+    "username":"poorna9",
+    "email":"example9@gmail.com"
+}
+
+### get user
+GET http://localhost:3000/users/67fbae9c5c41b380d426b189
+
+
+### modify user 
+PATCH  http://localhost:3000/users/67fbae9c5c41b380d426b189
+Content-Type: application/json
+
+{"email":"example7@gmail.com"}
+
+### delete user
+DELETE  http://localhost:3000/users/67fcf717541f8a960d0b6c71
+
+
+###
+GET http://localhost:3000/ndnvf
