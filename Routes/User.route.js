@@ -19,15 +19,15 @@ router.get("/" , UserController.getAllUsers )
 
 router.post("/" , UserController.createUser )
 
-// get/retrive user based on id -------------------------- 3 
+// get/retrive user based on id/username/email -------------------------- 3 
 
-router.get("/:id" , UserController.is_found , UserController.getUserById )
+router.get("/:input" , UserController.findUser , UserController.getUser )
 
-// edit/update user details on id ------------------------ 4 
+// edit/update user details on id/username/email ------------------------ 4 
 
-router.patch("/:id" , UserController.is_found , UserController.updateUserById )
+router.patch("/:input" , UserController.findUser, UserController.updateUser )
 
 
-// delete user based on  id -----------------  5
-router.delete("/:id" , UserController.is_found , UserController.deleteUserById ) 
+// delete user based on  id/username/email -----------------  5
+router.delete("/:input" , UserController.findUser , UserController.deleteUser ) 
 

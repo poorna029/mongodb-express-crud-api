@@ -38,7 +38,53 @@ async function is_found(req,res,next){
     }
 
 }
+async function findUser(req,res,next) {
+    const  {input}= (req.params);
+    let query = {};
+  
+    // Check if input is a valid ObjectId (for _id search)
+    if (mongoose.Types.ObjectId.isValid(input)) {
+      query = { _id: input };
+    } else if (input.includes("@") && input.includes(".com") ) {
+      query = { email: input };
+    } else {
+      query = { username: input };
+    }
+    
+  
+    const user = await userModel.findOne(query);
+    req.details= user;
+    next()
+    
+    
+  }
 
+  async function is_existed(input) {
+    
+    console.log(input?.includes("@"));
+    let query = {};
+  
+    // Check if input is a valid ObjectId (for _id search)
+    if (mongoose.Types.ObjectId.isValid(input)) {
+      query = { _id: input };
+      console.log("if");
+    } else if (input?.includes("@") && input?.includes(".com") ) {
+        console.log("elseif");
+      query = { email: input };
+    } else {
+        console.log("el");
+      query = { username: input };
+    }
+    
+  
+    const user = await userModel.findOne(query);
+    console.log(user,"pv");
+    
+    return user 
+    
+    
+    
+  }
 
 // checking in redis db 
 async function redis_check(id){
@@ -129,7 +175,7 @@ module.exports = {
         }
         
     },
-    getUserById:async (req,res,next)=>{
+    getUser:async (req,res,next)=>{
         
         
         try{  
@@ -139,20 +185,34 @@ module.exports = {
            return next(createError(400,e.message))
         }
     },
-    updateUserById:async (req,res,next)=>{
+    updateUser:async (req,res,next)=>{
     
         try{
-            const id = req.details.id ;
-            const patch_res = await userModel.findByIdAndUpdate(id,req.body,{new:true});
-            await redis_save(id,patch_res);
-            await redis_client.del("all_users");
-           return res.send(patch_res);   
+            const id = req?.details?.id ;
+            const is_email_exists = await is_existed(req.body.email) ;
+            const is_username_exists = await  is_existed(req.body.username);
+            if(id){
+                if(!is_email_exists && !is_username_exists){
+                
+                    const patch_res = await userModel.findByIdAndUpdate(id,req.body,{new:true});
+                    await redis_save(id,patch_res);
+                    await redis_client.del("all_users");
+                    return res.send(patch_res); 
+                }else{
+                    if(is_email_exists){
+                    return next(createError(400,"email you are trying to update is already another user's email , try with other email "));
+                    } else { return next(createError(400,"duplicate username/details foumd"))}
+                }
+            }
+            else{
+               return next(createError(400,"Record Not exited"));
+            }  
         }
         catch(e){
            return  next(createError(400,e.message));
         }
     },
-    deleteUserById: async (req,res,next)=>{
+    deleteUser: async (req,res,next)=>{
     
         try{
             const id =  req.details.id;
@@ -168,6 +228,6 @@ module.exports = {
     redis_check
     ,
     redis_save
-    ,is_found
+    ,is_found,findUser
 
 }

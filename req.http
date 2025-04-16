@@ -10,18 +10,19 @@ Content-Type: application/json
     "email":"example9@gmail.com"
 }
 
-### get user
-GET http://localhost:3000/users/67fbae9c5c41b380d426b189
+### get user by id , name , user
+GET http://localhost:3000/users/example5@gmail.com
 
 
 ### modify user 
-PATCH  http://localhost:3000/users/67fbae9c5c41b380d426b189
+PATCH  http://localhost:3000/users/example1@gmail.com
 Content-Type: application/json
 
 {"email":"example7@gmail.com"}
 
 ### delete user
-DELETE  http://localhost:3000/users/67fcf717541f8a960d0b6c71
+DELETE  http://localhost:3000/users/poorna
+
 
 
 ###
