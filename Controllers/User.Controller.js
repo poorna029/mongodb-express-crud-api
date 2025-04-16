@@ -103,11 +103,13 @@ module.exports = {
         }
     },
     createUser:async (req,res,next)=>{
-        const {username}=req.body;
+
+        const {username,email}=req.body ;
     
         try{
-            const is_user_exists = await userModel.findOne({username})
-            if(is_user_exists){
+            const is_user_exists_with_username = await userModel.findOne({username});
+            const is_user_exists_with_mail = await userModel.findOne({email});
+            if(is_user_exists_with_username || is_user_exists_with_mail){
                return res.send("user already exists") ;
             }
             const user = new userModel(req.body) ;
